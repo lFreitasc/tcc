@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Gerficode</string>
+    <string name="btnMan">Add</string>
+    <string name="button">Button</string>
+    <string name="title_activity_add">AddActivity</string>
+    <string name="textViewValue">Valor</string>
+    <string name="textViewDate">Data</string>
+    <string name="textViewStore">Estabelecimento</string>
+</resources>
