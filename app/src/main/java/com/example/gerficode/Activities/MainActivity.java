@@ -1,20 +1,27 @@
 package com.example.gerficode.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.gerficode.Adapters.AdapterNF;
+import com.example.gerficode.Helpers.HTML_Dealer;
+import com.example.gerficode.Model.NotaFiscalDTO;
 import com.example.gerficode.R;
 
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -22,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
     private ZXingScannerView zXingScannerView;
     private RecyclerView recyclerView;
+    private List<NotaFiscalDTO> notaFiscalDTOList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +38,16 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         recyclerView = findViewById(R.id.recycleViewData);
 
         //Adapter
-
+        AdapterNF adapter = new AdapterNF(notaFiscalDTOList);
 
         //RecyclerView
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        ((LinearLayoutManager) layoutManager).setStackFromEnd(true); //Reverte a exibixão dos dados do RecyclerView, verificar funcionamento
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-//        recyclerView.setAdapter();
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
+        recyclerView.setAdapter(adapter);
 
     }
 
@@ -68,21 +79,10 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 //        Toast.makeText(getApplicationContext(), result.getText(), Toast.LENGTH_SHORT).show();
 
         String url = result.getText();
-        try{
-            URL oracle = new URL("http://www.fazenda.pr.gov.br/nfce/qrcode/?p=41190311517841000278650390000286691391851000|2|1|2|27A225283A4A7321A02E72A95C416C05B6A33C94");
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(oracle.openStream()));
 
-            String html = ""; //<---- URL obtida pelo qr-code, verificar se contem link para a fazenda
-            while (in.readLine() != null)
-                html += in.readLine();
-            in.close();
+        new HTML_Dealer(getApplicationContext(), url);
 
-
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Erro durante a leitura do QR-Code", Toast.LENGTH_SHORT).show();
-        }
-//      permite proximas chamadas, caso contrario, camera trava no primeiro qr-code lido
+//      permite proximas chamadas, caso contrario, camera trava após primeira solicitação
         zXingScannerView.resumeCameraPreview(this);
     }
 

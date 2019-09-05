@@ -1,9 +1,11 @@
 package com.example.gerficode.Entity;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity (foreignKeys = @ForeignKey(entity = NotaFiscal.class, parentColumns = "id", childColumns = "idNotaFiscal"))
 public class Produtos {
     /*
     * Id
@@ -15,7 +17,8 @@ public class Produtos {
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
-    private Long idNotaFiscalId;
+    @ColumnInfo(index = true)
+    private Long idNotaFiscal;
 
     private String nome;
 
@@ -25,14 +28,14 @@ public class Produtos {
 
 
     public Produtos(Long foreignNotaFiscalId) {
-        this.idNotaFiscalId = foreignNotaFiscalId;
+        this.idNotaFiscal = foreignNotaFiscalId;
     }
 
     /*
     * Getters and Setters
     * */
     public Long getForeignNotaFiscalId() {
-        return idNotaFiscalId;
+        return idNotaFiscal;
     }
 
     public Long getId() {

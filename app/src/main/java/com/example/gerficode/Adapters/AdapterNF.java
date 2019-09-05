@@ -8,9 +8,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gerficode.Model.NotaFiscalDTO;
 import com.example.gerficode.R;
 
+import java.util.List;
+
 public class AdapterNF extends RecyclerView.Adapter<AdapterNF.MyViewHolder> {
+
+    private List<NotaFiscalDTO> lista;
+
+    public AdapterNF(List<NotaFiscalDTO> lista){
+        this.lista = lista;
+
+    }
+
 
     @NonNull
     @Override
@@ -24,11 +35,16 @@ public class AdapterNF extends RecyclerView.Adapter<AdapterNF.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
+        holder.estabelecimento.setText(lista.get(position).getEstabelecimento());
+        holder.valor.setText(lista.get(position).getValor().toString());
+        holder.data.setText(lista.get(position).getData().toString());
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+
+        return lista.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

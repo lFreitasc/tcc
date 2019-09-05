@@ -1,11 +1,12 @@
 package com.example.gerficode.Entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.sql.Date;
 
-@Entity
+@Entity(indices = @Index(value = {"id"}, unique = true))
 public class NotaFiscal {
     /*
     * ID
@@ -20,7 +21,7 @@ public class NotaFiscal {
 
     private Double valorTotal;
 
-    private String local;
+    private String estabelecimento;
 
 
     /*
@@ -51,11 +52,9 @@ public class NotaFiscal {
         this.valorTotal = valorTotal;
     }
 
-    public String getLocal() {
-        return local;
+    public String getEstabelecimento() {
+        return estabelecimento;
     }
 
-    public void setLocal(String local) {
-        this.local = local;
-    }
+    public void setEstabelecimento(String estabelecimento) {this.estabelecimento = estabelecimento;}
 }
