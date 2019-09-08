@@ -27,14 +27,14 @@ public class Produtos {
     private Float preco;
 
 
-    public Produtos(Long foreignNotaFiscalId) {
-        this.idNotaFiscal = foreignNotaFiscalId;
+    public Produtos(Long idNotaFiscal) {
+        this.idNotaFiscal = idNotaFiscal;
     }
 
     /*
     * Getters and Setters
     * */
-    public Long getForeignNotaFiscalId() {
+    public Long getIdNotaFiscal() {
         return idNotaFiscal;
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 
+import com.example.gerficode.Database.Database;
 import com.example.gerficode.Entity.NotaFiscal;
 import com.example.gerficode.Entity.Produtos;
 
@@ -16,12 +17,13 @@ public class HTML_Dealer {
 
     private String url;
     private Context context;
+    static Database db;
 
     public HTML_Dealer(Context context, String url){
         this.context = context;
         this.url = url;
 
-
+        db = Database.getDatabase(context);
         initMethod();
     }
 
@@ -49,11 +51,22 @@ public class HTML_Dealer {
     }
 
 
+    private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
+        db.notaFiscalDAO().create(notaFiscal);
+        for (Produtos p: produtos) {
+            db.produtoDAO().create(p);
+        }
+
+    }
+
     private void getDataFromHtml(String html){
 
         int index;
         NotaFiscal notaFiscal = new NotaFiscal();
         ArrayList<String> lidos = new ArrayList<>();
+        ArrayList<Produtos> listaProdutos = new ArrayList<>();
+
+
         Produtos produtos;
 
         // Estabelecimento
@@ -63,7 +76,6 @@ public class HTML_Dealer {
         index = html.indexOf("txtTopo");
         if(index != -1){
             index += 9;
-            //Colocar uma string recebendo o valor dentro do while para diminuir processamento <----
             while((retorno = html.charAt(index)) != '<') {
                 resultado += retorno;
                 index++;
@@ -72,10 +84,29 @@ public class HTML_Dealer {
             notaFiscal.setEstabelecimento(resultado);
 
         }
-        html = html.substring(index);
 
-        //Produtos, Quantidades e Valores
+        // DATA
+        index = html.indexOf("Emissão") + 18;
+        notaFiscal.setData(html.substring(index, index+10));
+
+
+        //TOTAL
+        index = html.indexOf("Valor total");
+        resultado = "";
+        if(index != -1){
+            index += 48;
+            while ((retorno = html.charAt(index)) != '<'){
+                resultado += retorno;
+                index++;
+            }
+
+            notaFiscal.setValorTotal(Float.parseFloat(resultado));
+        }
+
+        //Produtos -> while, enquanto existir produtos a serem cadastrados
         while(index != -1){
+
+            resultado = "";
 
             //Produto
             index = html.indexOf("txtTit2");
@@ -86,55 +117,59 @@ public class HTML_Dealer {
                     index++;
                 }
 
+                //Verificando se o produto lido já foi "cadastrado" (armazenado na lista para cadastro)
                 if(lidos.contains(resultado)){
-                    int pos;
-                    pos = lidos.indexOf(resultado);
-                    //#############################
-                    /*
-                    *
-                    * Preciso verificar se já foi cadastrado um mesmo produto durante essa nota fiscal
-                    * caso sim, verificar no banco pelo objeto e fazer um incremento (DAO), ou,
-                    * armazenar todos os objetos em memoria para verificar tal fato e no final
-                    * adicionar ao banco
-                    *
-                    * - pros da criação da lista: comum ter mais de um mesmo item na nf, vel. acesso ao
-                    * banco, facilidade de execução
-                    *
-                    * */
-                }else{
-                    lidos.add(resultado);
-                }
+                    int pos = lidos.indexOf(resultado);
+                    int quantidade = 1;
+                    //Quantidade
+                    index = html.indexOf("Qtde.");
+                    if(index != -1){
+                        index += 15;
+                        while((retorno = html.charAt(index)) != '<') {
+                            resultado += retorno;
+                            index++;
+                        }
 
-                resultado = "";
-
-                //Quantidade
-                index = html.indexOf("Qtde.");
-                if(index != -1){
-                    index += 15;
-                    while((retorno = html.charAt(index)) != '<') {
-                        resultado += retorno;
-                        index++;
+                        quantidade = Integer.parseInt(resultado);
                     }
 
-                }
+                    listaProdutos.get(pos).setQuantidade(listaProdutos.get(pos).getQuantidade() + quantidade);
 
-                //Valor
-                index = html.indexOf("valor");
-                resultado = "";
-                if(index != -1){
-                    index += 7;
-                    while((retorno = html.charAt(index)) != '<') {
-                        resultado += retorno;
-                        index++;
+
+                }else{
+
+                    produtos = new Produtos(notaFiscal.getId());
+                    produtos.setNome(resultado);
+                    lidos.add(resultado);
+
+                    //Quantidade
+                    index = html.indexOf("Qtde.");
+                    if(index != -1){
+                        index += 15;
+                        while((retorno = html.charAt(index)) != '<') {
+                            resultado += retorno;
+                            index++;
+                        }
+                        produtos.setQuantidade(Integer.parseInt(resultado));
+                    }
+
+
+                    //Valor
+                    index = html.indexOf("valor");
+                    resultado = "";
+                    if(index != -1){
+                        index += 7;
+                        while((retorno = html.charAt(index)) != '<') {
+                            resultado += retorno;
+                            index++;
+                        }
+                        produtos.setPreco(Float.parseFloat(resultado));
                     }
 
                 }
                 html = html.substring(index);
             }
         }
-
-
-        //Total
     }
 
 

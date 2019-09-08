@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.gerficode.Entity.NotaFiscal;
 
@@ -16,6 +17,9 @@ public interface NotaFiscalDAO {
 
     @Delete
     void delete(NotaFiscal notaFiscal);
+
+    @Update
+    void update(NotaFiscal notaFiscal);
 
     @Query("SELECT * FROM notafiscal")
     List<NotaFiscal> getAll();

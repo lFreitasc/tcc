@@ -17,9 +17,9 @@ public class NotaFiscal {
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
-    private Date data;
+    private String data;
 
-    private Double valorTotal;
+    private Float valorTotal;
 
     private String estabelecimento;
 
@@ -36,19 +36,19 @@ public class NotaFiscal {
         this.id = id;
     }
 
-    public Date getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(String data) {
         this.data = data;
     }
 
-    public Double getValorTotal() {
+    public Float getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(Float valorTotal) {
         this.valorTotal = valorTotal;
     }
 

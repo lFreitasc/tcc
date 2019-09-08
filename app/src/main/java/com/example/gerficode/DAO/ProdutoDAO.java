@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.gerficode.Entity.Produtos;
 
@@ -17,6 +18,9 @@ public interface ProdutoDAO {
 
     @Delete
     void delete(Produtos produtos);
+
+    @Update
+    void update(Produtos produtos);
 
     @Query("SELECT * FROM produtos")
     List<Produtos> getAll();
