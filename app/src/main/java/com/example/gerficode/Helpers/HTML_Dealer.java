@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 
+
 import com.example.gerficode.Database.Database;
 import com.example.gerficode.Entity.NotaFiscal;
 import com.example.gerficode.Entity.Produtos;
@@ -23,7 +24,7 @@ public class HTML_Dealer {
         this.context = context;
         this.url = url;
 
-        db = Database.getDatabase(context);
+        db = Database.getDatabase(this.context);
         initMethod();
     }
 
@@ -32,7 +33,7 @@ public class HTML_Dealer {
             try{
                 URL oracle = new URL(url);
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(oracle.openStream()));
+                        new InputStreamReader(oracle.openStream())); //Erro durante essa chamada
 
                 String html = "";
                 while (in.readLine() != null)
@@ -41,9 +42,11 @@ public class HTML_Dealer {
 
 
                 getDataFromHtml(html);
-
+                Toast.makeText(context,"ASD",Toast.LENGTH_LONG).show();
             }catch (Exception e){
                 Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_SHORT).show();
+
+
             }
         }else{
             Toast.makeText(context, "Erro de leitura da Nota Fiscal, endereço não condizente", Toast.LENGTH_LONG).show();
@@ -171,6 +174,7 @@ public class HTML_Dealer {
             }
         }
     }
+
 
 
 }

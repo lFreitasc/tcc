@@ -21,11 +21,11 @@
 
     <Button
         android:id="@+id/mainCameraButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="99dp"
+        android:layout_height="93dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:drawableRight="@drawable/qr-code"
+        android:drawableRight="@android:drawable/ic_menu_camera"
         android:onClick="scanQR"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

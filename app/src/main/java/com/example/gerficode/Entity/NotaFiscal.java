@@ -4,7 +4,6 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import java.sql.Date;
 
 @Entity(indices = @Index(value = {"id"}, unique = true))
 public class NotaFiscal {
