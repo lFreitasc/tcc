@@ -1,5 +1,8 @@
 package com.example.gerficode.Adapters;
 
+import android.os.Debug;
+import android.util.Log;
+import android.util.LogPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +39,16 @@ public class AdapterNF extends RecyclerView.Adapter<AdapterNF.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         holder.estabelecimento.setText(lista.get(position).getEstabelecimento());
-        holder.valor.setText(lista.get(position).getValorTotal().toString());
-        holder.data.setText(lista.get(position).getData());
+        try{
+            holder.valor.setText(lista.get(position).getValorTotal().toString()); //valor nulo ?
+        }catch (Exception e){
+            holder.valor.setText("5.0000");
+
+        }
+
+
+//        holder.data.setText(lista.get(position).getData());
+        holder.data.setText("28/05/1996");
 
     }
 

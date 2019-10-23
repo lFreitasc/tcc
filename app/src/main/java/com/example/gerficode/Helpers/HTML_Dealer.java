@@ -1,6 +1,7 @@
 package com.example.gerficode.Helpers;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -36,28 +37,40 @@ public class HTML_Dealer {
                         new InputStreamReader(oracle.openStream())); //Erro durante essa chamada
 
                 String html = "";
-                while (in.readLine() != null)
-                    html += in.readLine();
+                String retorno = "";
+                while ((retorno = in.readLine()) != null)
+                    html += retorno;
                 in.close();
 
 
                 getDataFromHtml(html);
-                Toast.makeText(context,"ASD",Toast.LENGTH_LONG).show();
             }catch (Exception e){
-                Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("Lucas", e.getMessage());
+
+//                Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_LONG).show();
 
 
             }
         }else{
-            Toast.makeText(context, "Erro de leitura da Nota Fiscal, endereço não condizente", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Erro de leitura da Nota Fiscal, endereço não condizente ou Estado não suportado", Toast.LENGTH_LONG).show();
         }
     }
 
 
     private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
-        db.notaFiscalDAO().create(notaFiscal);
+        /*db.notaFiscalDAO().create(notaFiscal);
         for (Produtos p: produtos) {
             db.produtoDAO().create(p);
+        }*/
+        Log.e("Lucas",notaFiscal.getEstabelecimento());
+        Log.e("Lucas", notaFiscal.getValorTotal().toString());
+        Log.e("Lucas", notaFiscal.getData());
+        for (Produtos p: produtos){
+            Log.e("Lucas", p.getNome());
+            Log.e("Lucas", p.getPreco().toString());
+            Log.e("Lucas", p.getQuantidade().toString());
+
         }
 
     }
@@ -67,10 +80,11 @@ public class HTML_Dealer {
         int index;
         NotaFiscal notaFiscal = new NotaFiscal();
         ArrayList<String> lidos = new ArrayList<>();
+        ArrayList<Float> lidosQtd = new ArrayList<>();
         ArrayList<Produtos> listaProdutos = new ArrayList<>();
-
-
         Produtos produtos;
+        Float valorTotal = 0f;
+
 
         // Estabelecimento
         String resultado = "";
@@ -89,7 +103,7 @@ public class HTML_Dealer {
         }
 
         // DATA
-        index = html.indexOf("Emissão") + 18;
+        index = html.indexOf("Emissão:") + 18;
         notaFiscal.setData(html.substring(index, index+10));
 
 
@@ -97,16 +111,20 @@ public class HTML_Dealer {
         index = html.indexOf("Valor total");
         resultado = "";
         if(index != -1){
-            index += 48;
+            index += 51;
             while ((retorno = html.charAt(index)) != '<'){
                 resultado += retorno;
                 index++;
             }
 
+            resultado = resultado.replaceAll(" ","");
+            resultado = resultado.replaceAll(",",".");
+            Log.e("Lucas","Valor total: "+resultado);
             notaFiscal.setValorTotal(Float.parseFloat(resultado));
         }
 
         //Produtos -> while, enquanto existir produtos a serem cadastrados
+        index = 0;
         while(index != -1){
 
             resultado = "";
@@ -123,7 +141,10 @@ public class HTML_Dealer {
                 //Verificando se o produto lido já foi "cadastrado" (armazenado na lista para cadastro)
                 if(lidos.contains(resultado)){
                     int pos = lidos.indexOf(resultado);
-                    int quantidade = 1;
+                    Float quantidade = lidosQtd.get(pos); //existe a possibilidade de erro ?
+
+                    resultado = "";
+
                     //Quantidade
                     index = html.indexOf("Qtde.");
                     if(index != -1){
@@ -133,7 +154,9 @@ public class HTML_Dealer {
                             index++;
                         }
 
-                        quantidade = Integer.parseInt(resultado);
+                        resultado = resultado.replaceAll(" ","");
+                        resultado = resultado.replaceAll(",",".");
+                        quantidade = Float.parseFloat(resultado);
                     }
 
                     listaProdutos.get(pos).setQuantidade(listaProdutos.get(pos).getQuantidade() + quantidade);
@@ -144,6 +167,8 @@ public class HTML_Dealer {
                     produtos = new Produtos(notaFiscal.getId());
                     produtos.setNome(resultado);
                     lidos.add(resultado);
+                    resultado = "";
+
 
                     //Quantidade
                     index = html.indexOf("Qtde.");
@@ -153,7 +178,14 @@ public class HTML_Dealer {
                             resultado += retorno;
                             index++;
                         }
-                        produtos.setQuantidade(Integer.parseInt(resultado));
+                        resultado = resultado.replaceAll(" ","");
+                        resultado = resultado.replaceAll(",",".");
+                        if((index = resultado.indexOf(".")) != -1){
+                            resultado = resultado.substring(0,index+2);
+                        }
+                        produtos.setQuantidade(Float.parseFloat(resultado));
+                        lidosQtd.add(produtos.getQuantidade());
+
                     }
 
 
@@ -166,13 +198,24 @@ public class HTML_Dealer {
                             resultado += retorno;
                             index++;
                         }
+                        resultado = resultado.replaceAll(" ","");
+                        resultado = resultado.replaceAll(",",".");
                         produtos.setPreco(Float.parseFloat(resultado));
                     }
 
+                    listaProdutos.add(produtos);
                 }
                 html = html.substring(index);
             }
         }
+        if(lidos.size() == 0){
+            Toast.makeText(context,"Erro durante leitura dos produtos",Toast.LENGTH_LONG).show();
+        }else{
+            notaFiscal.setValorTotal(valorTotal);
+            putDataIntoDatabase(notaFiscal, listaProdutos);
+        }
+
+
     }
 
 

@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.gerficode.Adapters.AdapterNF;
 import com.example.gerficode.Database.Database;
@@ -22,7 +24,6 @@ import com.example.gerficode.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
 
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
 
@@ -93,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     public void handleResult(com.google.zxing.Result result) {
         String url = result.getText();
-
-//        Toast.makeText(getApplicationContext(), url,Toast.LENGTH_SHORT).show();
 
 
         new HTML_Dealer(getApplicationContext(), url);

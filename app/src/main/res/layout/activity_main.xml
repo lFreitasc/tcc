@@ -21,8 +21,8 @@
 
     <Button
         android:id="@+id/mainCameraButton"
-        android:layout_width="99dp"
-        android:layout_height="93dp"
+        android:layout_width="55dp"
+        android:layout_height="46dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:drawableRight="@android:drawable/ic_menu_camera"
@@ -32,8 +32,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleViewData"
-        android:layout_width="405dp"
-        android:layout_height="440dp"
+        android:layout_width="416dp"
+        android:layout_height="305dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/btnManAdd"

@@ -22,7 +22,7 @@ public class Produtos {
 
     private String nome;
 
-    private int quantidade;
+    private Float quantidade;
 
     private Float preco;
 
@@ -54,11 +54,11 @@ public class Produtos {
         this.nome = nome;
     }
 
-    public int getQuantidade() {
+    public Float getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Float quantidade) {
         this.quantidade = quantidade;
     }
 
