@@ -1,7 +1,7 @@
 package com.example.gerficode.Helpers;
 
 import android.content.Context;
-import android.util.Log;
+//import android.util.Log;
 import android.widget.Toast;
 
 
@@ -45,10 +45,9 @@ public class HTML_Dealer {
 
                 getDataFromHtml(html);
             }catch (Exception e){
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("Lucas", e.getMessage());
+                //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 
-//                Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_LONG).show();
 
 
             }
@@ -59,10 +58,10 @@ public class HTML_Dealer {
 
 
     private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
-        /*db.notaFiscalDAO().create(notaFiscal);
+        db.notaFiscalDAO().create(notaFiscal);
         for (Produtos p: produtos) {
             db.produtoDAO().create(p);
-        }*/
+        }/*
         Log.e("Lucas",notaFiscal.getEstabelecimento());
         Log.e("Lucas", notaFiscal.getValorTotal().toString());
         Log.e("Lucas", notaFiscal.getData());
@@ -71,7 +70,7 @@ public class HTML_Dealer {
             Log.e("Lucas", p.getPreco().toString());
             Log.e("Lucas", p.getQuantidade().toString());
 
-        }
+        }*/
 
     }
 
@@ -119,7 +118,7 @@ public class HTML_Dealer {
 
             resultado = resultado.replaceAll(" ","");
             resultado = resultado.replaceAll(",",".");
-            Log.e("Lucas","Valor total: "+resultado);
+
             notaFiscal.setValorTotal(Float.parseFloat(resultado));
         }
 
