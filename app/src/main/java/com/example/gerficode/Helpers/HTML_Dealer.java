@@ -2,6 +2,7 @@ package com.example.gerficode.Helpers;
 
 import android.content.Context;
 //import android.util.Log;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -30,6 +31,7 @@ public class HTML_Dealer {
     }
 
     public void initMethod(){
+
         if(url.contains("fazenda.pr.gov.br/nfce/qrcode")){
             try{
                 URL oracle = new URL(url);
@@ -41,12 +43,11 @@ public class HTML_Dealer {
                 while ((retorno = in.readLine()) != null)
                     html += retorno;
                 in.close();
-
-
+                Log.e("Lucas",url);
                 getDataFromHtml(html);
             }catch (Exception e){
                 //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-
+                Log.e("Lucas",e.getMessage());
                 Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_LONG).show();
 
 
@@ -58,19 +59,17 @@ public class HTML_Dealer {
 
 
     private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
-        db.notaFiscalDAO().create(notaFiscal);
+
+        /*db.notaFiscalDAO().create(notaFiscal);
         for (Produtos p: produtos) {
             db.produtoDAO().create(p);
-        }/*
-        Log.e("Lucas",notaFiscal.getEstabelecimento());
-        Log.e("Lucas", notaFiscal.getValorTotal().toString());
-        Log.e("Lucas", notaFiscal.getData());
-        for (Produtos p: produtos){
-            Log.e("Lucas", p.getNome());
-            Log.e("Lucas", p.getPreco().toString());
-            Log.e("Lucas", p.getQuantidade().toString());
-
         }*/
+        Log.e("Lucas","Estabelecimento: "+notaFiscal.getEstabelecimento());
+        Log.e("Lucas", "Valor total: "+notaFiscal.getValorTotal().toString());
+        Log.e("Lucas", "Data: "+notaFiscal.getData());
+        for (Produtos p: produtos){
+            Log.e("Lucas", "Produto: "+p.getNome() + " - Preco: "+ p.getPreco().toString() + "- Quantidade: "+p.getQuantidade().toString());
+        }
 
     }
 
@@ -82,7 +81,6 @@ public class HTML_Dealer {
         ArrayList<Float> lidosQtd = new ArrayList<>();
         ArrayList<Produtos> listaProdutos = new ArrayList<>();
         Produtos produtos;
-        Float valorTotal = 0f;
 
 
         // Estabelecimento
@@ -120,6 +118,8 @@ public class HTML_Dealer {
             resultado = resultado.replaceAll(",",".");
 
             notaFiscal.setValorTotal(Float.parseFloat(resultado));
+        }else{
+            notaFiscal.setValorTotal(0f);
         }
 
         //Produtos -> while, enquanto existir produtos a serem cadastrados
@@ -159,6 +159,8 @@ public class HTML_Dealer {
                     }
 
                     listaProdutos.get(pos).setQuantidade(listaProdutos.get(pos).getQuantidade() + quantidade);
+                    index = html.indexOf("Unit.:");
+                    index+=16;
 
 
                 }else{
@@ -189,10 +191,10 @@ public class HTML_Dealer {
 
 
                     //Valor
-                    index = html.indexOf("valor");
+                    index = html.indexOf("Unit.:");
                     resultado = "";
                     if(index != -1){
-                        index += 7;
+                        index += 16;
                         while((retorno = html.charAt(index)) != '<') {
                             resultado += retorno;
                             index++;
@@ -210,7 +212,6 @@ public class HTML_Dealer {
         if(lidos.size() == 0){
             Toast.makeText(context,"Erro durante leitura dos produtos",Toast.LENGTH_LONG).show();
         }else{
-            notaFiscal.setValorTotal(valorTotal);
             putDataIntoDatabase(notaFiscal, listaProdutos);
         }
 

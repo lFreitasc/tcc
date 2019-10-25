@@ -39,16 +39,9 @@ public class AdapterNF extends RecyclerView.Adapter<AdapterNF.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         holder.estabelecimento.setText(lista.get(position).getEstabelecimento());
-        try{
-            holder.valor.setText(lista.get(position).getValorTotal().toString()); //valor nulo ?
-        }catch (Exception e){
-            holder.valor.setText("5.0000");
 
-        }
-
-
-//        holder.data.setText(lista.get(position).getData());
-        holder.data.setText("28/05/1996");
+        holder.valor.setText("Total: R$ "+lista.get(position).getValorTotal().toString()); //valor nulo ?
+        holder.data.setText(lista.get(position).getData());
 
     }
 
