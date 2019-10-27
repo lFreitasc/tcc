@@ -10,6 +10,7 @@ import com.example.gerficode.Entity.Produtos;
 
 import java.util.List;
 
+
 @Dao
 public interface ProdutoDAO {
 
@@ -24,4 +25,11 @@ public interface ProdutoDAO {
 
     @Query("SELECT * FROM produtos")
     List<Produtos> getAll();
+
+    @Query("SELECT * FROM produtos WHERE idNotaFiscal = :id")
+    List<Produtos> getProductsList(Long id);
+
+    @Query("DELETE FROM produtos WHERE idNotaFiscal = :id")
+    void deleteByNF(Long id);
+
 }

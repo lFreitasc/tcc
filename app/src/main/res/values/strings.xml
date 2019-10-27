@@ -3,7 +3,13 @@
     <string name="btnMan">Manualmente</string>
     <string name="button">Button</string>
     <string name="title_activity_add">AddActivity</string>
-    <string name="textViewValue">Valor</string>
+    <string name="textViewValue">Valor Unit.</string>
     <string name="textViewDate">Data</string>
     <string name="textViewStore">Estabelecimento</string>
+    <string name="estabelecimento">Estabelecimento:</string>
+    <string name="data">Data:</string>
+    <string name="produtos">Produtos</string>
+    <string name="produto">Produto</string>
+    <string name="quantidade">Quantidade</string>
+    <string name="adicionar">Adicionar</string>
 </resources>

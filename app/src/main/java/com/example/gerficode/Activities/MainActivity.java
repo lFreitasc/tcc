@@ -12,19 +12,20 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.example.gerficode.Adapters.AdapterNF;
 import com.example.gerficode.Database.Database;
 import com.example.gerficode.Entity.NotaFiscal;
 import com.example.gerficode.Helpers.HTML_Dealer;
+import com.example.gerficode.Helpers.RecyclerItemClickListener;
 import com.example.gerficode.R;
 
 
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,16 +62,46 @@ public class MainActivity extends AppCompatActivity {
 
         //RecyclerView
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        ((LinearLayoutManager) layoutManager).setStackFromEnd(true); //Reverte a exibixão dos dados do RecyclerView, verificar funcionamento
+        //((LinearLayoutManager) layoutManager).setStackFromEnd(true); //Reverte a exibixão dos dados do RecyclerView, verificar funcionamento
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
+
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), recyclerView,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+
+                            @Override
+                            public void onItemClick(View view, int position)
+                            {
+                                Intent intent = new Intent(getApplicationContext(), activity_addManually.class);
+                                Long idNotaFiscal = database.notaFiscalDAO().getAll().get(position).getId();
+                                intent.putExtra("idNotaFiscal",idNotaFiscal);
+                                startActivity(intent);
+                            }
+
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+//                                Toast.makeText(getApplication().getBaseContext(), db.heroDAO().getHeroes().get(position),Toast.LENGTH_LONG).show();
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            }
+                        }
+                )
+        );
+
     }
 
     public void openAdd(View view){
-        startActivity(new Intent(this, AddActivity.class));
+        startActivity(new Intent(this, activity_addManually.class));
     }
 
     public void scanQR(View view){

@@ -20,13 +20,13 @@ public class HTML_Dealer {
 
     private String url;
     private Context context;
-    static Database db;
+    //static Database db;
 
     public HTML_Dealer(Context context, String url){
         this.context = context;
         this.url = url;
 
-        db = Database.getDatabase(this.context);
+        //db = Database.getDatabase(this.context);
         initMethod();
     }
 
@@ -58,12 +58,12 @@ public class HTML_Dealer {
     }
 
 
-    private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
+    /*private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
 
         /*db.notaFiscalDAO().create(notaFiscal);
         for (Produtos p: produtos) {
             db.produtoDAO().create(p);
-        }*/
+        }
         Log.e("Lucas","Estabelecimento: "+notaFiscal.getEstabelecimento());
         Log.e("Lucas", "Valor total: "+notaFiscal.getValorTotal().toString());
         Log.e("Lucas", "Data: "+notaFiscal.getData());
@@ -71,7 +71,7 @@ public class HTML_Dealer {
             Log.e("Lucas", "Produto: "+p.getNome() + " - Preco: "+ p.getPreco().toString() + "- Quantidade: "+p.getQuantidade().toString());
         }
 
-    }
+    }*/
 
     private void getDataFromHtml(String html){
 
@@ -212,7 +212,8 @@ public class HTML_Dealer {
         if(lidos.size() == 0){
             Toast.makeText(context,"Erro durante leitura dos produtos",Toast.LENGTH_LONG).show();
         }else{
-            putDataIntoDatabase(notaFiscal, listaProdutos);
+            //putDataIntoDatabase(notaFiscal, listaProdutos);
+            new Database_Dealer(context, notaFiscal, listaProdutos);
         }
 
 

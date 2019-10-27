@@ -12,8 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.activity_camera"></activity>
-        <activity android:name=".Activities.AddActivity" />
+        <activity android:name=".Activities.activity_addManually"></activity>
+        <activity android:name=".Activities.activity_camera" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

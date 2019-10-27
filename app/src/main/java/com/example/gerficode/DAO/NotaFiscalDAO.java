@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.example.gerficode.Entity.NotaFiscal;
 
+
 import java.util.List;
 
 @Dao
@@ -23,4 +24,7 @@ public interface NotaFiscalDAO {
 
     @Query("SELECT * FROM notafiscal")
     List<NotaFiscal> getAll();
+
+    @Query("SELECT * FROM notafiscal WHERE id = :id")
+    NotaFiscal getByID(Long id);
 }
