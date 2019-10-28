@@ -35,7 +35,10 @@ public class activity_addManually extends AppCompatActivity {
     private Database database;
     private NotaFiscal notaFiscal;
     private Produtos ultimoProduto = null;
+    private int ultimoProdutoIndex = 0;
     private boolean updateFromExisting = false;
+
+    //Layout
     private TextView textEstab;
     private TextView textData;
     private TextView textNome;
@@ -69,13 +72,6 @@ public class activity_addManually extends AppCompatActivity {
             btnDelete.setVisibility(View.VISIBLE);
 
             listaProdutos = database.produtoDAO().getProductsList(notaFiscal.getId());
-
-            for(Produtos p : database.produtoDAO().getAll()){
-                Log.e("Lucas", "Nome: "+p.getNome()+" - IdNF produtos: "+p.getIdNotaFiscal());
-            }
-
-            //Log.e("Lucas","bundle != null - size: " + listaProdutos.size() + " - idNF: " + notaFiscal.getId());
-
         }
 
 
@@ -102,7 +98,7 @@ public class activity_addManually extends AppCompatActivity {
                             public void onItemClick(View view, int position)
                             {
                                 ultimoProduto = database.produtoDAO().getAll().get(position);
-
+                                ultimoProdutoIndex = position;
                                 textNome.setText(ultimoProduto.getNome());
                                 textQuantidade.setText(ultimoProduto.getQuantidade().toString());
                                 textValorUnit.setText(ultimoProduto.getPreco().toString());
@@ -112,8 +108,8 @@ public class activity_addManually extends AppCompatActivity {
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-                                Toast.makeText(getApplicationContext(),"Toque longo", Toast.LENGTH_LONG).show();
-
+                                Toast.makeText(getApplicationContext(),"Produto removido", Toast.LENGTH_LONG).show();
+                                listaProdutos.remove(position);
                                 adapter.notifyDataSetChanged();
                             }
 
@@ -129,61 +125,77 @@ public class activity_addManually extends AppCompatActivity {
     //Ação click adicionar
     public void btnActionAdd(View view){
 
-        if(ultimoProduto != null){
-            ultimoProduto.setNome(textNome.toString());
-            ultimoProduto.setQuantidade(Float.parseFloat(textQuantidade.toString()));
-            ultimoProduto.setPreco(Float.parseFloat(textValorUnit.toString()));
-            btnText.setText("Adicionar");
-        }else{
-            ultimoProduto = new Produtos();
-            ultimoProduto.setNome(textNome.toString());
-            ultimoProduto.setQuantidade(Float.parseFloat(textQuantidade.toString()));
-            ultimoProduto.setPreco(Float.parseFloat(textValorUnit.toString()));
+        try {
+            if (ultimoProduto != null) {
+                listaProdutos.remove(ultimoProdutoIndex);
+                ultimoProduto.setNome(textNome.getText().toString());
+                ultimoProduto.setQuantidade(Float.parseFloat(textQuantidade.getText().toString()));
+                ultimoProduto.setPreco(Float.parseFloat(textValorUnit.getText().toString()));
+                btnText.setText("Adicionar");
+            } else {
+                ultimoProduto = new Produtos();
+                ultimoProduto.setNome(textNome.getText().toString());
+                ultimoProduto.setQuantidade(Float.parseFloat(textQuantidade.getText().toString()));
+                ultimoProduto.setPreco(Float.parseFloat(textValorUnit.getText().toString()));
+            }
             listaProdutos.add(ultimoProduto);
+
+
+            //limpar referencia e campos para novos produtos
+            ultimoProduto = null;
+            textNome.setText("");
+            textValorUnit.setText("");
+            textQuantidade.setText("");
+
+            adapter.notifyDataSetChanged();
+        }catch (Exception e){
+            Log.e("Lucas", "Classe activity_addManually, linha 158: "+e.getMessage());
         }
-
-        //limpar referencia e campos para novos produtos
-        ultimoProduto = null;
-        textNome.setText("");
-        textValorUnit.setText("");
-        textQuantidade.setText("");
-
-        adapter.notifyDataSetChanged();
     }
 
 
     //Ação click OK
     public void btnActionOK(View view){
 
-
+        float valorTotal = 0f;
         if(updateFromExisting){
-            database.notaFiscalDAO().update(notaFiscal);
+            //caso esteja alterando uma nota fiscal já existente
             database.produtoDAO().deleteByNF(notaFiscal.getId());
             for(Produtos p : listaProdutos){
+                p.setIdNotaFiscal(notaFiscal.getId());
+                valorTotal += p.getPreco() * p.getQuantidade();
                 database.produtoDAO().create(p);
             }
+            notaFiscal.setValorTotal(valorTotal);
+            notaFiscal.setData(textData.getText().toString());
+            notaFiscal.setEstabelecimento(textEstab.getText().toString());
+            database.notaFiscalDAO().update(notaFiscal);
+
 
         }else{
+            //Caso precise criar uma nova nota fiscal
             notaFiscal = new NotaFiscal();
             notaFiscal.setEstabelecimento(textEstab.toString());
             notaFiscal.setData(textData.toString());
-            float valorTotal = 0f;
+
             for(Produtos p : listaProdutos){
-                database.produtoDAO().create(p);
                 valorTotal += p.getPreco() * p.getQuantidade();
             }
             notaFiscal.setValorTotal(valorTotal);
 
+
             new Database_Dealer(getApplicationContext(), notaFiscal, listaProdutos);
-            database.notaFiscalDAO().create(notaFiscal);
+
 
         }
+        finish();
 
     }
 
     public void btnDelte(View view){
         database.produtoDAO().deleteByNF(notaFiscal.getId());
         database.notaFiscalDAO().delete(notaFiscal);
+
         finish();
     }
 }

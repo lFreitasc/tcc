@@ -37,7 +37,13 @@ public class AdapterNF extends RecyclerView.Adapter<AdapterNF.MyViewHolder> {
 
         holder.estabelecimento.setText(lista.get(position).getEstabelecimento());
 
-        holder.valor.setText("Total: R$ "+lista.get(position).getValorTotal().toString()); //valor nulo ?
+        String strValorTotal = lista.get(position).getValorTotal().toString();
+        if(strValorTotal.length() > 5){
+            holder.valor.setText("Total: R$ "+strValorTotal.substring(0,5));
+        }else{
+            holder.valor.setText("Total: R$ "+strValorTotal); //valor nulo ?
+
+        }
         holder.data.setText(lista.get(position).getData());
 
     }

@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private List<NotaFiscal> notaFiscalList = new ArrayList<>();
     private Database database;
     static final int CAMERA_INTENT_CODE = 13;
+    static final int INTENT_CODE_UPDATE = 15;
+
     AdapterNF adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +58,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        defineRecyclerView();
-    }
 
     public void defineRecyclerView(){
         recyclerView = findViewById(R.id.recycleViewData);
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), activity_addManually.class);
                                 Long idNotaFiscal = database.notaFiscalDAO().getAll().get(position).getId();
                                 intent.putExtra("idNotaFiscal",idNotaFiscal);
-                                startActivity(intent);
+                                startActivityForResult(intent,INTENT_CODE_UPDATE);
                             }
 
 
@@ -106,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openAdd(View view){
-        startActivity(new Intent(this, activity_addManually.class));
+        startActivityForResult(new Intent(this, activity_addManually.class),INTENT_CODE_UPDATE);
     }
 
     public void scanQR(View view){
@@ -119,25 +116,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Permite retornar ao Menu principal sempre que apertar o botão back, usado como rota de escape da camera.
-    /*@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (keyCode == KeyEvent.KEYCODE_BACK ) {
-            setContentView(R.layout.activity_main);
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }*/
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == CAMERA_INTENT_CODE && data != null){
             String url = (String) data.getExtras().getSerializable("URL");
             new HTML_Dealer(getApplicationContext(), url);
-            notaFiscalList = database.notaFiscalDAO().getAll();
-            adapter.notifyDataSetChanged();
         }
+        notaFiscalList = database.notaFiscalDAO().getAll();
+        defineRecyclerView();
+        for(NotaFiscal n : notaFiscalList){
+            Log.e("Lucas", n.getValorTotal().toString());
+        }
+
 
     }
 }
