@@ -27,10 +27,6 @@ public class Produtos {
     private Float preco;
 
 
-    public Produtos(Long idNotaFiscal) {
-        this.idNotaFiscal = idNotaFiscal;
-    }
-
     /*
     * Getters and Setters
     * */
@@ -69,4 +65,6 @@ public class Produtos {
     public void setPreco(Float preco) {
         this.preco = preco;
     }
+
+    public void setIdNotaFiscal(Long id){this.idNotaFiscal = id;}
 }

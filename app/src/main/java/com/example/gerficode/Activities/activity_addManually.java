@@ -135,7 +135,7 @@ public class activity_addManually extends AppCompatActivity {
             ultimoProduto.setPreco(Float.parseFloat(textValorUnit.toString()));
             btnText.setText("Adicionar");
         }else{
-            ultimoProduto = new Produtos(notaFiscal.getId());
+            ultimoProduto = new Produtos();
             ultimoProduto.setNome(textNome.toString());
             ultimoProduto.setQuantidade(Float.parseFloat(textQuantidade.toString()));
             ultimoProduto.setPreco(Float.parseFloat(textValorUnit.toString()));

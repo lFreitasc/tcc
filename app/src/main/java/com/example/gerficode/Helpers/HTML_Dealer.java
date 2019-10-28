@@ -165,7 +165,7 @@ public class HTML_Dealer {
 
                 }else{
 
-                    produtos = new Produtos(notaFiscal.getId());
+                    produtos = new Produtos();
                     produtos.setNome(resultado);
                     lidos.add(resultado);
                     resultado = "";

@@ -16,6 +16,7 @@ public class Database_Dealer {
 
         db.notaFiscalDAO().create(notaFiscal);
         for (Produtos p: listaProdutos) {
+            p.setIdNotaFiscal(notaFiscal.getId());
             db.produtoDAO().create(p);
         }
     }
