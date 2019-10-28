@@ -51,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        notaFiscalList = database.notaFiscalDAO().getAll();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
         defineRecyclerView();

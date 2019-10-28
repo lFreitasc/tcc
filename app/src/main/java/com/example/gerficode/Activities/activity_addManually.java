@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +26,11 @@ import com.example.gerficode.R;
 import java.util.ArrayList;
 import java.util.List;
 
-//Falta fazer uma consulta no banco de dados e verificar se existe produtos referentes a nota fiscal em tratamento
-//Esse método é tanto para adicionar manualmente quanto para editar já existentes
-//Vale refatoração para CEU-Activity ??
+
 
 public class activity_addManually extends AppCompatActivity {
     private RecyclerView recyclerView;
-    AdapterProdutos adapter;
+    private AdapterProdutos adapter;
     private List<Produtos> listaProdutos = new ArrayList<>();
     private Database database;
     private NotaFiscal notaFiscal;
@@ -41,8 +41,8 @@ public class activity_addManually extends AppCompatActivity {
     private TextView textNome;
     private TextView textValorUnit;
     private TextView textQuantidade;
-
-
+    private Button btnText;
+    private Button btnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,8 @@ public class activity_addManually extends AppCompatActivity {
         textQuantidade = findViewById(R.id.editTextProductQuant);
         textData = findViewById(R.id.editTextNfData);
         textNome = findViewById(R.id.editTextProductName);
-
+        btnText = findViewById(R.id.buttonAdd);
+        btnDelete = findViewById(R.id.buttonApagar);
 
         Bundle bundle = getIntent().getExtras();
         database = Database.getDatabase(activity_addManually.this);
@@ -65,6 +66,15 @@ public class activity_addManually extends AppCompatActivity {
             updateFromExisting = true;
             textData.setText(notaFiscal.getData());
             textEstab.setText(notaFiscal.getEstabelecimento());
+            btnDelete.setVisibility(View.VISIBLE);
+
+            listaProdutos = database.produtoDAO().getProductsList(notaFiscal.getId());
+
+            for(Produtos p : database.produtoDAO().getAll()){
+                Log.e("Lucas", "Nome: "+p.getNome()+" - IdNF produtos: "+p.getIdNotaFiscal());
+            }
+
+            //Log.e("Lucas","bundle != null - size: " + listaProdutos.size() + " - idNF: " + notaFiscal.getId());
 
         }
 
@@ -78,7 +88,6 @@ public class activity_addManually extends AppCompatActivity {
 
         //RecyclerView
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        //((LinearLayoutManager) layoutManager).setStackFromEnd(true); //Reverte a exibixão dos dados do RecyclerView, verificar funcionamento
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -92,16 +101,20 @@ public class activity_addManually extends AppCompatActivity {
                             @Override
                             public void onItemClick(View view, int position)
                             {
-                                Produtos p = database.produtoDAO().getAll().get(position);
-                                textNome.setText(p.getNome());
-                                textQuantidade.setText(p.getQuantidade().toString());
-                                textValorUnit.setText(p.getPreco().toString());
+                                ultimoProduto = database.produtoDAO().getAll().get(position);
+
+                                textNome.setText(ultimoProduto.getNome());
+                                textQuantidade.setText(ultimoProduto.getQuantidade().toString());
+                                textValorUnit.setText(ultimoProduto.getPreco().toString());
+                                btnText.setText("Alterar");
                             }
 
 
                             @Override
                             public void onLongItemClick(View view, int position) {
                                 Toast.makeText(getApplicationContext(),"Toque longo", Toast.LENGTH_LONG).show();
+
+                                adapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -120,7 +133,7 @@ public class activity_addManually extends AppCompatActivity {
             ultimoProduto.setNome(textNome.toString());
             ultimoProduto.setQuantidade(Float.parseFloat(textQuantidade.toString()));
             ultimoProduto.setPreco(Float.parseFloat(textValorUnit.toString()));
-
+            btnText.setText("Adicionar");
         }else{
             ultimoProduto = new Produtos(notaFiscal.getId());
             ultimoProduto.setNome(textNome.toString());
@@ -134,6 +147,8 @@ public class activity_addManually extends AppCompatActivity {
         textNome.setText("");
         textValorUnit.setText("");
         textQuantidade.setText("");
+
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -164,5 +179,11 @@ public class activity_addManually extends AppCompatActivity {
 
         }
 
+    }
+
+    public void btnDelte(View view){
+        database.produtoDAO().deleteByNF(notaFiscal.getId());
+        database.notaFiscalDAO().delete(notaFiscal);
+        finish();
     }
 }

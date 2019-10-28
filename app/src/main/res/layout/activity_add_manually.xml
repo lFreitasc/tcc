@@ -48,10 +48,10 @@
 
     <EditText
         android:id="@+id/editTextProductName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="394dp"
+        android:layout_height="54dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/produto"
@@ -63,64 +63,76 @@
 
     <EditText
         android:id="@+id/editTextProductValorUnit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="111dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/textViewValue"
         android:inputType="numberDecimal"
         android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="@+id/editTextProductName"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextProductName" />
 
     <EditText
         android:id="@+id/editTextProductQuant"
-        android:layout_width="213dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="108dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/quantidade"
         android:inputType="numberDecimal"
         android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="@+id/editTextProductValorUnit"
-        app:layout_constraintTop_toBottomOf="@+id/editTextProductValorUnit" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonAdd"
+        app:layout_constraintStart_toEndOf="@+id/editTextProductValorUnit"
+        app:layout_constraintTop_toTopOf="@+id/editTextProductValorUnit" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="104dp"
         android:layout_marginBottom="32dp"
         android:onClick="btnActionOK"
         android:text="@android:string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewProdutos"
-        android:layout_width="390dp"
-        android:layout_height="202dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonAdd" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:onClick="btnActionAdd"
         android:text="@string/adicionar"
-        app:layout_constraintEnd_toEndOf="@+id/editTextProductQuant"
-        app:layout_constraintStart_toStartOf="@+id/editTextProductQuant"
-        app:layout_constraintTop_toBottomOf="@+id/editTextProductQuant" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextProductQuant" />
+
+    <Button
+        android:id="@+id/buttonApagar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="88dp"
+        android:onClick="btnDelte"
+        android:text="Apagar"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
