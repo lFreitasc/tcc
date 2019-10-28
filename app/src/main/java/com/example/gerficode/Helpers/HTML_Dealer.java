@@ -1,13 +1,11 @@
 package com.example.gerficode.Helpers;
 
 import android.content.Context;
-//import android.util.Log;
 import android.util.Log;
 import android.widget.Toast;
 
 
 
-import com.example.gerficode.Database.Database;
 import com.example.gerficode.Entity.NotaFiscal;
 import com.example.gerficode.Entity.Produtos;
 
@@ -20,13 +18,11 @@ public class HTML_Dealer {
 
     private String url;
     private Context context;
-    //static Database db;
 
     public HTML_Dealer(Context context, String url){
         this.context = context;
         this.url = url;
 
-        //db = Database.getDatabase(this.context);
         initMethod();
     }
 
@@ -43,7 +39,6 @@ public class HTML_Dealer {
                 while ((retorno = in.readLine()) != null)
                     html += retorno;
                 in.close();
-                Log.e("Lucas",url);
                 getDataFromHtml(html);
             }catch (Exception e){
                 //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();

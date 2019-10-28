@@ -14,9 +14,10 @@ public class Database_Dealer {
     public Database_Dealer(Context context, NotaFiscal notaFiscal, List<Produtos> listaProdutos) {
         db = Database.getDatabase(context);
 
-        db.notaFiscalDAO().create(notaFiscal);
+        Long idNF = db.notaFiscalDAO().create(notaFiscal);
+
         for (Produtos p: listaProdutos) {
-            p.setIdNotaFiscal(notaFiscal.getId());
+            p.setIdNotaFiscal(idNF);
             db.produtoDAO().create(p);
         }
     }

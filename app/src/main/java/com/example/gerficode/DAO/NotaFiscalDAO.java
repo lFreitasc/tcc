@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface NotaFiscalDAO {
     @Insert
-    void create(NotaFiscal notaFiscal);
+    long create(NotaFiscal notaFiscal);
 
     @Delete
     void delete(NotaFiscal notaFiscal);

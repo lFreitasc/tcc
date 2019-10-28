@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         //RecyclerView
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        //((LinearLayoutManager) layoutManager).setStackFromEnd(true); //Reverte a exibixão dos dados do RecyclerView, verificar funcionamento
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Permite retornar ao Menu principal sempre que apertar o botão back, usado como rota de escape da camera.
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
             setContentView(R.layout.activity_main);
@@ -130,13 +128,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == CAMERA_INTENT_CODE && data != null){
             String url = (String) data.getExtras().getSerializable("URL");
             new HTML_Dealer(getApplicationContext(), url);
+            notaFiscalList = database.notaFiscalDAO().getAll();
             adapter.notifyDataSetChanged();
         }
 
