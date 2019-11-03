@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -155,41 +155,43 @@ public class activity_addManually extends AppCompatActivity {
 
 
     //Ação click OK
-    public void btnActionOK(View view){
+    public void btnActionOK(View view) {
+        if (textData.getText().toString() == "" || textEstab.getText().toString() == "" || listaProdutos.size() == 0) {
+            Toast.makeText(getApplicationContext(), "Verifique os dados cadastrados", Toast.LENGTH_LONG).show();
+        } else {
+            float valorTotal = 0f;
+            if (updateFromExisting) {
+                //caso esteja alterando uma nota fiscal já existente
+                database.produtoDAO().deleteByNF(notaFiscal.getId());
+                for (Produtos p : listaProdutos) {
+                    p.setIdNotaFiscal(notaFiscal.getId());
+                    valorTotal += p.getPreco() * p.getQuantidade();
+                    database.produtoDAO().create(p);
+                }
+                notaFiscal.setValorTotal(valorTotal);
+                notaFiscal.setData(textData.getText().toString());
+                notaFiscal.setEstabelecimento(textEstab.getText().toString());
+                database.notaFiscalDAO().update(notaFiscal);
 
-        float valorTotal = 0f;
-        if(updateFromExisting){
-            //caso esteja alterando uma nota fiscal já existente
-            database.produtoDAO().deleteByNF(notaFiscal.getId());
-            for(Produtos p : listaProdutos){
-                p.setIdNotaFiscal(notaFiscal.getId());
-                valorTotal += p.getPreco() * p.getQuantidade();
-                database.produtoDAO().create(p);
+
+            } else {
+                //Caso precise criar uma nova nota fiscal
+                notaFiscal = new NotaFiscal();
+                notaFiscal.setEstabelecimento(textEstab.toString());
+                notaFiscal.setData(textData.toString());
+
+                for (Produtos p : listaProdutos) {
+                    valorTotal += p.getPreco() * p.getQuantidade();
+                }
+                notaFiscal.setValorTotal(valorTotal);
+
+
+                new Database_Dealer(getApplicationContext(), notaFiscal, listaProdutos);
+
+
             }
-            notaFiscal.setValorTotal(valorTotal);
-            notaFiscal.setData(textData.getText().toString());
-            notaFiscal.setEstabelecimento(textEstab.getText().toString());
-            database.notaFiscalDAO().update(notaFiscal);
-
-
-        }else{
-            //Caso precise criar uma nova nota fiscal
-            notaFiscal = new NotaFiscal();
-            notaFiscal.setEstabelecimento(textEstab.toString());
-            notaFiscal.setData(textData.toString());
-
-            for(Produtos p : listaProdutos){
-                valorTotal += p.getPreco() * p.getQuantidade();
-            }
-            notaFiscal.setValorTotal(valorTotal);
-
-
-            new Database_Dealer(getApplicationContext(), notaFiscal, listaProdutos);
-
-
+            finish();
         }
-        finish();
-
     }
 
     public void btnDelte(View view){
