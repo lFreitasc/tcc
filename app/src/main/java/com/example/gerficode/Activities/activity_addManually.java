@@ -177,8 +177,8 @@ public class activity_addManually extends AppCompatActivity {
             } else {
                 //Caso precise criar uma nova nota fiscal
                 notaFiscal = new NotaFiscal();
-                notaFiscal.setEstabelecimento(textEstab.toString());
-                notaFiscal.setData(textData.toString());
+                notaFiscal.setEstabelecimento(textEstab.getText().toString());
+                notaFiscal.setData(textData.getText().toString());
 
                 for (Produtos p : listaProdutos) {
                     valorTotal += p.getPreco() * p.getQuantidade();
