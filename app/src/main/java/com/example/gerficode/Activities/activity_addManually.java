@@ -156,7 +156,7 @@ public class activity_addManually extends AppCompatActivity {
 
     //Ação click OK
     public void btnActionOK(View view) {
-        if (textData.getText().toString() == "" || textEstab.getText().toString() == "" || listaProdutos.size() == 0) {
+        if (textData.getText().toString().equals("") || textEstab.getText().toString().equals("") || listaProdutos.size() == 0) {
             Toast.makeText(getApplicationContext(), "Verifique os dados cadastrados", Toast.LENGTH_LONG).show();
         } else {
             float valorTotal = 0f;
