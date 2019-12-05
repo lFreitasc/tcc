@@ -26,47 +26,31 @@ public class HTML_Dealer {
         initMethod();
     }
 
-    public void initMethod(){
+    private void initMethod(){
 
         if(url.contains("fazenda.pr.gov.br/nfce/qrcode")){
             try{
                 URL oracle = new URL(url);
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(oracle.openStream())); //Erro durante essa chamada
+                        new InputStreamReader(oracle.openStream()));
 
                 String html = "";
-                String retorno = "";
+                String retorno;
                 while ((retorno = in.readLine()) != null)
+                {
                     html += retorno;
+                }
                 in.close();
+
                 getDataFromHtml(html);
             }catch (Exception e){
-                //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("Lucas",e.getMessage());
                 Toast.makeText(context, "Erro durante a leitura do QR-Code", Toast.LENGTH_LONG).show();
-
-
             }
         }else{
             Toast.makeText(context, "Erro de leitura da Nota Fiscal, endereço não condizente ou Estado não suportado", Toast.LENGTH_LONG).show();
         }
     }
-
-
-    /*private void putDataIntoDatabase(NotaFiscal notaFiscal, ArrayList<Produtos> produtos){
-
-        /*db.notaFiscalDAO().create(notaFiscal);
-        for (Produtos p: produtos) {
-            db.produtoDAO().create(p);
-        }
-        Log.e("Lucas","Estabelecimento: "+notaFiscal.getEstabelecimento());
-        Log.e("Lucas", "Valor total: "+notaFiscal.getValorTotal().toString());
-        Log.e("Lucas", "Data: "+notaFiscal.getData());
-        for (Produtos p: produtos){
-            Log.e("Lucas", "Produto: "+p.getNome() + " - Preco: "+ p.getPreco().toString() + "- Quantidade: "+p.getQuantidade().toString());
-        }
-
-    }*/
 
     private void getDataFromHtml(String html){
 
@@ -76,11 +60,11 @@ public class HTML_Dealer {
         ArrayList<Float> lidosQtd = new ArrayList<>();
         ArrayList<Produtos> listaProdutos = new ArrayList<>();
         Produtos produtos;
-
+        float valorTotal = 0;
 
         // Estabelecimento
         String resultado = "";
-        char retorno = '.';
+        char retorno;
 
         index = html.indexOf("txtTopo");
         if(index != -1){
@@ -99,7 +83,7 @@ public class HTML_Dealer {
         notaFiscal.setData(html.substring(index, index+10));
 
 
-        //TOTAL
+        /*//TOTAL
         index = html.indexOf("Valor total");
         resultado = "";
         if(index != -1){
@@ -114,8 +98,9 @@ public class HTML_Dealer {
 
             notaFiscal.setValorTotal(Float.parseFloat(resultado));
         }else{
+            Log.e("Lucas","Valor não encontrado");
             notaFiscal.setValorTotal(0f);
-        }
+        }*/
 
         //Produtos -> while, enquanto existir produtos a serem cadastrados
         index = 0;
@@ -152,7 +137,7 @@ public class HTML_Dealer {
                         resultado = resultado.replaceAll(",",".");
                         quantidade = Float.parseFloat(resultado);
                     }
-
+                    valorTotal += listaProdutos.get(pos).getPreco() * quantidade;
                     listaProdutos.get(pos).setQuantidade(listaProdutos.get(pos).getQuantidade() + quantidade);
                     index = html.indexOf("Unit.:");
                     index+=16;
@@ -197,6 +182,7 @@ public class HTML_Dealer {
                         resultado = resultado.replaceAll(" ","");
                         resultado = resultado.replaceAll(",",".");
                         produtos.setPreco(Float.parseFloat(resultado));
+                        valorTotal += produtos.getPreco() * produtos.getQuantidade();
                     }
 
                     listaProdutos.add(produtos);
@@ -208,6 +194,7 @@ public class HTML_Dealer {
             Toast.makeText(context,"Erro durante leitura dos produtos",Toast.LENGTH_LONG).show();
         }else{
             //putDataIntoDatabase(notaFiscal, listaProdutos);
+            notaFiscal.setValorTotal(valorTotal);
             new Database_Dealer(context, notaFiscal, listaProdutos);
         }
 
