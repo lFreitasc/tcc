@@ -97,7 +97,7 @@ public class activity_addManually extends AppCompatActivity {
                             @Override
                             public void onItemClick(View view, int position)
                             {
-                                ultimoProduto = database.produtoDAO().getAll().get(position);
+                                ultimoProduto = database.produtoDAO().getProductsList(notaFiscal.getId()).get(position);
                                 ultimoProdutoIndex = position;
                                 textNome.setText(ultimoProduto.getNome());
                                 textQuantidade.setText(ultimoProduto.getQuantidade().toString());
@@ -139,7 +139,6 @@ public class activity_addManually extends AppCompatActivity {
                 ultimoProduto.setPreco(Float.parseFloat(textValorUnit.getText().toString()));
             }
             listaProdutos.add(ultimoProduto);
-
 
             //limpar referencia e campos para novos produtos
             ultimoProduto = null;
