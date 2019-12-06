@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onItemClick(View view, int position)
                             {
                                 Intent intent = new Intent(getApplicationContext(), activity_addManually.class);
-                                Long idNotaFiscal = database.notaFiscalDAO().getAll().get(position).getId();
+                                int indexPos = notaFiscalList.size();
+                                Long idNotaFiscal =  notaFiscalList.get(indexPos - position - 1).getId();
                                 intent.putExtra("idNotaFiscal",idNotaFiscal);
                                 startActivityForResult(intent,INTENT_CODE_UPDATE);
                             }
@@ -126,10 +127,5 @@ public class MainActivity extends AppCompatActivity {
         }
         notaFiscalList = database.notaFiscalDAO().getAll();
         defineRecyclerView();
-        for(NotaFiscal n : notaFiscalList){
-            Log.e("Lucas", n.getValorTotal().toString());
-        }
-
-
     }
 }
