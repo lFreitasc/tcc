@@ -24,6 +24,7 @@ import com.example.gerficode.R;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void defineRecyclerView(){
+        Collections.reverse(notaFiscalList);
         recyclerView = findViewById(R.id.recycleViewData);
         adapter = new AdapterNF(notaFiscalList);
 
