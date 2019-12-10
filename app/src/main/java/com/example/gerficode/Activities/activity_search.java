@@ -47,7 +47,7 @@ public class activity_search extends AppCompatActivity {
 
         for(Produtos p : todos_produtos){
             if(count <= 10){
-                if(editDistance(busca,p.getNome()) <= 13){
+                if(editDistance(busca,p.getNome()) <= 6){
                     count++;
                     retorno += p.getNome() + " - R$" + p.getPreco() + " - Data: ";
                     for(NotaFiscal nf : todas_notas){
