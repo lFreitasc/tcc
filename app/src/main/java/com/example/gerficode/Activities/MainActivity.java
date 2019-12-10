@@ -110,14 +110,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scanQR(View view){
-
         Intent intencao = new Intent(this, activity_camera.class);
         startActivityForResult(intencao, CAMERA_INTENT_CODE);
+    }
 
-
-
+    public void openSearch(View view){
+        Intent intencao = new Intent(this, activity_search.class);
+        startActivity(intencao);
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -12,4 +12,5 @@
     <string name="produto">Produto</string>
     <string name="quantidade">Quantidade</string>
     <string name="adicionar">Adicionar</string>
+    <string name="buscar">Buscar</string>
 </resources>

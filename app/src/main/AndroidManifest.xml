@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.activity_addManually" android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+        <activity android:name=".Activities.activity_search"></activity>
+        <activity
+            android:name=".Activities.activity_addManually"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".Activities.activity_camera" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
